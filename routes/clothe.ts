@@ -2,6 +2,7 @@ import {Router} from "express"
 import {check} from "express-validator"
 
 import {verifyToken,isAdmin} from "../middleware/auth"
+import upload from '../libs/multer';
 import {
     getClothesByModel,
     getClothe,
@@ -33,6 +34,7 @@ router.post(
         check('clotheModel','Model is required').not().isEmpty(),
         check('clotheModel','La marca debe ser minimo de 20 caracteres').isLength({min:20})
     ],
+    upload.single('image'),
     createClothe
 );
 router.put(
@@ -43,6 +45,7 @@ router.put(
         check('clotheModel','Model is required').not().isEmpty(),
         check('clotheModel','La marca debe ser minimo de 20 caracteres').isLength({min:20})
     ],
+    upload.single('image'),
     updateClothe
 );
 router.put(

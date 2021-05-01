@@ -6,11 +6,6 @@ export interface IClothePicture extends Document{
 }
 
 const clotheSchema = new Schema<IClothePicture>({
-    picture:{
-        type:String,
-        required:true,
-        
-    },
     path:{
         type:String,
         required:true

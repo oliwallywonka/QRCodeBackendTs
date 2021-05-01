@@ -30,10 +30,6 @@ router.post(
     '/',
     verifyToken,
     isAdmin,
-    [
-        check('picture','name picture is required').not().isEmpty(),
-        check('picture','the naame debe ser minimo de 2 caracteres').isLength({min:2})
-    ],
     upload.single('image'),
     createPicture
 );
@@ -41,9 +37,6 @@ router.put(
     '/:id',
     verifyToken,
     isAdmin,
-    [
-        check('brand','La marca debe ser minimo de 2 caracteres').isLength({min:2})
-    ],
     upload.single('image'),
     updatePicture
 );

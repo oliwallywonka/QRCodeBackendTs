@@ -9,6 +9,9 @@ export interface IUser extends Document{
     password:string,
     user:string,
     rol:Types.ObjectId|IRol,
+    name: string,
+    lastName: string,
+    ci: string,
     comparePassword: (password:string,changedPassword:string) => Promise<boolean>
 
 }
@@ -38,12 +41,14 @@ const userSchema = new Schema<IUser>({
     },
     name:{
         type:String,
-        required:true,
         trim:true
     },
     lastName:{
         type:String,
-        required:true,
+        trim:true
+    },
+    ci:{
+        type:String,
         trim:true
     },
     status:{

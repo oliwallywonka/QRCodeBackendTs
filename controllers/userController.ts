@@ -6,9 +6,9 @@ export const getUsers = async (req:Request,res:Response) => {
     try {
         const users = await User
             .find()
-            .select(['-password','-status'])
-            .where({status:true})
-            .populate('rol');
+            .select(['-password'])
+            .populate('rol')
+            .sort({updatedAt:-1});
         return res.status(200).json({users});
     } catch (error) {
         res.status(500).json({message:"server Error"})
@@ -20,7 +20,7 @@ export const getUser = async(req:Request,res:Response) => {
         const userId = req.params.id;
         const user = await User
             .findById(userId)
-            .select(['-password','-status'])
+            .select(['-password'])
             .populate('rol');
         if(!user) return res.status(404).json({msg:'user not found'});
         return res.status(200).json({user});
@@ -36,13 +36,13 @@ export const createUser = async(req:Request,res:Response) => {
         return res.status(400).json({errores:errors.array()});
     }
 
-    const {email,password,user,rol}:{email:string,password:string,user:string,rol:string} = req.body;
+    const {email,password,user,rol,name,lastName,ci}:{email:string,password:string,user:string,rol:string,name:string,lastName:string,ci:string} = req.body;
     const newUser = new User();
 
     try {
         const userexist = await User.findOne({email});
 
-        if(userexist) return res.status(400).json({msg:"User already exist"});
+        if(userexist) return res.status(400).json({msg:"Email already exist"});
         
         if(rol){
             if(rol == 'admin') {
@@ -60,7 +60,9 @@ export const createUser = async(req:Request,res:Response) => {
         newUser.email = email;
         newUser.password = password;
         newUser.user = user;
-
+        newUser.name = name,
+        newUser.lastName = lastName;
+        newUser.ci = ci;
         await newUser.save();
         return res.status(201).json({newUser});
     } catch (error) {
@@ -75,13 +77,16 @@ export const updateUser = async(req:Request,res:Response) => {
     if(!errors.isEmpty()){
         return res.status(400).json({errores:errors.array()});
     }
-    const {email,password,user,rol}:{email:string,password:string,user:string,rol:string} = req.body;
+    const {email,password,user,rol,name,lastName,ci}:{email:string,password:string,user:string,rol:string,name:string,lastName:string,ci:string} = req.body;
     const userId = req.params.id;
     const newUser = new User({_id:userId});
 
     if(email) newUser.email = email;
     if(password) newUser.password = password;
     if(user) newUser.user = user;
+    if(name) newUser.name = name;
+    if(lastName) newUser.lastName = lastName;
+    if(ci) newUser.ci = ci;
 
     try {
         const userexist = await User.findOne({email});

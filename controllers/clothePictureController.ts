@@ -31,16 +31,14 @@ export const createPicture = async(req:Request,res:Response) => {
         return res.status(400).json({errores:errors.array()})
     }
 
-    const { picture } = req.body;
     const pathPicture = req.file.path;
 
     try {
         const newPicture = new ClothePicture();
-        newPicture.picture = picture;
         newPicture.path = pathPicture;
         await newPicture.save();
         return res.json({
-            picture
+            newPicture
         });
     } catch (error) {
         res.status(500).send('server error')
